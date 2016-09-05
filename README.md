@@ -45,15 +45,15 @@ Provided processors are basically wrappers around varius sentiment analysis impl
 ## ADDING NEW PROCESSORS
 
 All processors have to be stored in directory:
-> src/main/java/cz/vutbr/mefw/plugins
+> src/main/java/cz/vutbr/mefw/plugins  
 > Example: src/main/java/cz/vutbr/mefw/plugins/SA_lingpipe
 
 If your processor uses additional classes, they should be stored in:
-> src/main/java/cz/vutbr/mefw/plugins/[name_of_processor_group]
+> src/main/java/cz/vutbr/mefw/plugins/[name_of_processor_group]  
 > Example src/main/java/cz/vutbr/mefw/plugins/SA/
 
 Other resources like datasets, libs, etc. belongs in:
-> resources/[name_of_processor_group]
+> resources/[name_of_processor_group]  
 > Example: resources/but_sentiment
 
 
