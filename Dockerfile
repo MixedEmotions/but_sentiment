@@ -22,6 +22,8 @@ ADD ./pom.xml  /usr/src/sentiment/pom.xml
 ADD ./download_datasets.sh  /usr/src/sentiment/download_datasets.sh
 WORKDIR /usr/src/sentiment
 
+ENV LANG C.UTF-8
+
 RUN mvn install
 RUN ./download_datasets.sh
 
