@@ -13,6 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.*;
+import com.github.jsonldjava.core.*;
+import java.util.HashMap;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.InputStream;
+import com.github.jsonldjava.utils.JsonUtils;
 
 import cz.vutbr.mefw.Mefw;
 
@@ -28,8 +34,8 @@ public class Mefw {
             "Mixed Emotions IO\n"
                     + "\n"
                     + "Usage:\n"
-                    + "  mefw server <ip> [--port=<port> --config=<conf>]\n"
-                    + "  mefw process <processor> <inputfile> <outputfile> [--config=<conf>]\n"
+                    + "  mefw server <ip> [--port=<port> --config=<conf> --jsonld]\n"
+                    + "  mefw process <processor> <inputfile> <outputfile> [--config=<conf> --jsonld]\n"
                     + "  mefw list processors [--config=<conf>]\n"
                     + "  mefw (-h | --help)\n"
                     + "  mefw --version\n"
@@ -58,7 +64,7 @@ public class Mefw {
         }
     }
 
-    private void processFile(String in, String out, String processorName)
+    private void processFile(String in, String out, String processorName, boolean jsonld )
     {
         processorPool.load(processorName);
         ProcessorAdapter processor = processorPool.get(processorName);
@@ -67,19 +73,29 @@ public class Mefw {
             System.err.println("Module/Processor could not be initialized.");
             return;
         }
-        try {
-            String input = new Scanner(new File(in)).useDelimiter("\\Z").next();
-            String output = processor.process(input);
-            PrintWriter outputfile = new PrintWriter(out);
-            outputfile.println(output);
-            outputfile.close();
-        }
-        /*
-        try (Stream<String> stream = Files.lines(Paths.get(fileName)))
+
+        try
         {
-            stream.forEach(System.out::println);
+                if (jsonld)
+                {
+                    InputStream inputStream = new FileInputStream("input.json");
+                    Object jsonObject = JsonUtils.fromInputStream(inputStream);
+                    Map context = new HashMap();
+                    JsonLdOptions options = new JsonLdOptions();
+                    Object compact = JsonLdProcessor.compact(jsonObject, context, options);
+                    System.out.println(JsonUtils.toPrettyString(compact));
+                    //String output = processor.process(input);
+                    System.err.println("JSON bitches");
+                }
+                else
+                {
+                    String input = new Scanner(new File(in)).useDelimiter("\\Z").next();
+                    String output = processor.process(input);
+                    PrintWriter outputfile = new PrintWriter(out);
+                    outputfile.println(output);
+                    outputfile.close();
+                }
         }
-         */
         catch (FileNotFoundException e0 )
         {
             System.err.println("Input file \""+in+"\" not found.");
@@ -90,17 +106,20 @@ public class Mefw {
             System.err.println("Module/Processor was not initialized properly or at all.");
             //e1.printStackTrace();
         }
-        /*
         catch (IOException e3 )
         {
             System.err.println("Input file \""+in+"\" not found.");
             //e0.printStackTrace();
         }
-        */
+        catch (JsonLdError e4)
+        {
+            System.err.println("JSON-LD is not currently working");
+            //System.err.println("Something wrong with json-ld file");
+        }
 
     }
 
-    private void startServer(String host, Integer port){
+    private void startServer(String host, Integer port, boolean jsonld ){
         System.out.println("Initialize HTTP server at: " + host + ":" + port);
         processorPool.loadAll();
         server.initialize(host, port);
@@ -120,7 +139,7 @@ public class Mefw {
 
 
     public static void main(String [] args){
-        Map<String, Object> opts = new Docopt(doc).withVersion("Mixed Emotions 0.1").parse(args);
+        Map<String, Object> opts = new Docopt(doc).withVersion("Mixed Emotions 1.0.0").parse(args);
         //TODO: make global debug mode
         System.out.println(opts);
         Mefw core = new Mefw();
@@ -135,7 +154,7 @@ public class Mefw {
 
         if((Boolean)opts.get("server")){
             System.out.println("starting server");
-            core.startServer((String)opts.get("<ip>"), Integer.parseInt((String)opts.get("--port")));
+            core.startServer((String)opts.get("<ip>"), Integer.parseInt((String)opts.get("--port")),(Boolean) opts.get("--jsonld"));
             //TODO:Instead readline() use Thread.join for wait and sigint (ctrl+c) for ending
             try {
                 System.in.read();
@@ -143,7 +162,7 @@ public class Mefw {
                 e.printStackTrace();
             }
         }else if((Boolean)opts.get("process")){
-            core.processFile((String)opts.get("<inputfile>"), (String)opts.get("<outputfile>"), (String)opts.get("<processor>"));
+            core.processFile((String)opts.get("<inputfile>"), (String)opts.get("<outputfile>"), (String)opts.get("<processor>"), (Boolean) opts.get("--jsonld"));
         }else if((Boolean)opts.get("list")){
             core.listProcessors();
         }

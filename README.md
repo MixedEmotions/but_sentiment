@@ -27,10 +27,10 @@ Prints available processors.
 > mefw list processors
 
 Starts up HTTP server daemon. Default port is 80.
-> mefw server <ip> [--port=<port> --config=<conf>]
+> mefw server <ip> [--port=<port> --config=<conf> --jsonld]
 
 Prints if text in input file was positive, neutral or negative.
-> mefw process <processor> <inputfile> <outputfile>
+> mefw process <processor> <inputfile> <outputfile> [--config=<conf> --jsonld]
 > Example: $ SA_lingpipe input.txt output.txt
 
 ## PROCESSORS

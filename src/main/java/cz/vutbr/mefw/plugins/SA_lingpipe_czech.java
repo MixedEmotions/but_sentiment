@@ -38,7 +38,7 @@ public class SA_lingpipe_czech extends SA_lingpipe
 	public SA_lingpipe_czech(Config config)
 
 	{
-		super.path_to_resources=config.get("resoucesPath")+"/but_sentiment/";
+		super.path_to_resources=config.get("resoucesPath")+"/me_sentiment/";
 		super.processor_name = "lingpipe_czech";
 	}
 

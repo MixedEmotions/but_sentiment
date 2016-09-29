@@ -26,4 +26,6 @@ public abstract class ProcessorAdapter {
 
     abstract public String process(String data);
 
+    //abstract public String process(String data);
+
 }

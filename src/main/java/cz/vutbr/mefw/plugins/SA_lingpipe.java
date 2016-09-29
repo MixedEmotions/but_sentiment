@@ -34,7 +34,7 @@ public class SA_lingpipe extends ProcessorAdapter
 	// Name of this processor, for Loader
 	protected String processor_name = "lingpipe";
 
-	public String path_to_resources = "./resources/but_sentiment/";
+	public String path_to_resources="./resources/me_sentiment/";
 	//public String path_to_resources = "./";
 
 	public SA_lingpipe()
@@ -49,12 +49,12 @@ public class SA_lingpipe extends ProcessorAdapter
 
 	public SA_lingpipe(Config config)
 	{
-		this.path_to_resources=config.get("resoucesPath")+"/but_sentiment/";
+		this.path_to_resources=config.get("resoucesPath")+"/me_sentiment/";
 	}
 
 	public SA_lingpipe(Config config,String new_procesor_name)
 	{
-		this.path_to_resources=config.get("resoucesPath")+"/but_sentiment/";
+		this.path_to_resources=config.get("resoucesPath")+"/me_sentiment/";
 		this.processor_name=new_procesor_name;
 	}
 
@@ -266,6 +266,94 @@ public class SA_lingpipe extends ProcessorAdapter
 		this.test(test_data);
 	}
 
+	public void me_little_test() throws FileNotFoundException, IOException
+	{
+		int positive_all = 0;
+		int neutral_all = 0;
+		int negative_all = 0;
+		int positive_right = 0;
+		int positive_wrong = 0;
+		int neutral_right = 0;
+		int neutral_wrong = 0;
+		int negative_right = 0;
+		int negative_wrong = 0;
+
+
+		if ( this.is_ready() )
+		{
+			try(BufferedReader br = new BufferedReader(new FileReader( "SemEval2015Task10BDevelopmentFull.tsv" ))) {
+				for(String line; (line = br.readLine()) != null; ) {
+					String[] parts = line.split("\t");
+					if( parts.length == 4 )
+					{
+						if ( parts[3]!="Not Available" )
+						{
+							String result=this.process(parts[3]);
+							if(parts[2].equals("positive"))
+							{
+								positive_all++;
+								if ( result.equals("positive") )
+									positive_right++;
+								else if ( result.equals("neutral") )
+									neutral_wrong++;
+								else if ( result.equals("negative") )
+									negative_wrong++;
+							}
+							else if ( parts[2].equals("neutral") || parts[2].equals("objective-OR-neutral") )
+							{
+								neutral_all++;
+								if ( result.equals("neutral") )
+									neutral_right++;
+								else if ( result.equals("positive") )
+									positive_wrong++;
+								else if ( result.equals("negative") )
+									negative_wrong++;
+							}
+							else if ( parts[2].equals("negative") )
+							{
+								negative_all++;
+								if ( result.equals("negative") )
+									negative_right++;
+								else if ( result.equals("positive") )
+									positive_wrong++;
+								else if ( result.equals("neutral") )
+									neutral_wrong++;
+							}
+						}
+					}
+				}
+				// line is not visible here.
+			}
+		}
+		else
+		{
+			throw new IllegalStateException("Sometin wong");
+		}
+
+		int all = positive_all+negative_all+neutral_all;
+		int all_right_pos = positive_right+negative_right+neutral_right;
+		int all_wrong_pos = positive_wrong+negative_wrong+neutral_wrong;
+
+		float precision= positive_right/((float)positive_right+positive_wrong);
+		float recall= positive_right/((float)positive_all);
+		float F1= 2*((precision*recall)/(precision+recall));
+
+		System.out.println(String.format("TEST RESULTS for tool:%s",processor_name));
+		System.out.println(String.format("POSITIVE: all %d right_pos %d wrong_pos %d precision %4f recall %4f P1 %2f",positive_all,positive_right,positive_wrong,precision,recall,F1));
+
+		precision = neutral_right/((float)neutral_right+neutral_wrong);
+		recall = neutral_right/(float)neutral_all;
+		F1= 2*((precision*recall)/(precision+recall));
+		System.out.println(String.format("NEUTRAL: all %d right_pos %d wrong_pos %d precision %4f recall %4f P1 %2f",neutral_all,neutral_right,neutral_wrong,precision,recall,F1));
+
+		precision = negative_right/((float)negative_right+negative_wrong);
+		recall = negative_right/(float)negative_all;
+		F1= 2*((precision*recall)/(precision+recall));
+		System.out.println(String.format("NEGATIVE: all %d right_pos %d wrong_pos %d precision %4f recall %4f P1 %2f",negative_all,negative_right,negative_wrong,precision,recall,F1));
+
+		System.out.println(String.format("ALL: all %d right_pos %d wrong_pos",all,all_right_pos,all_wrong_pos));
+	}
+
 
 	// Main for testing purposes
 	public static void main(String[] args)
@@ -274,7 +362,8 @@ public class SA_lingpipe extends ProcessorAdapter
 		System.out.println("LOAD");
 		try
 		{
-			tool.test();
+			tool.load();
+			tool.me_little_test();
 			tool.unload();
 		}
 		catch(Exception e)
