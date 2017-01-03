@@ -13,7 +13,7 @@ This package requires java 1.8 and python3 ( SA_VADER ), maven for instalation a
 2. Use maven to build jar file.
 > mvn install
 
-Output of this operation will be two files, mefw-0.0.1-jar-with-dependencies.jar and mefw-0.0.1.jar in targer directory.
+Output of this will be two files, mefw-0.0.1-jar-with-dependencies.jar and mefw-0.0.1.jar in target directory.
 
 ## USAGE
 
@@ -52,14 +52,12 @@ If your processor uses additional classes, they should be stored in:
 > src/main/java/cz/vutbr/mefw/plugins/[name_of_processor_group]
 > Example src/main/java/cz/vutbr/mefw/plugins/SA/
 
-Other resources like datasets, libs, etc. belongs in:
+Other resources like datasets, libs, etc. belong in:
 > resources/[name_of_processor_group]
 > Example: resources/but_sentiment
 
-
-
 All processors have to be subclass of **ProcessorAdapter** class, which is abstract class with 3 methods.
-If this requirements is not met, you processor will not work.
+If this requirements are not met, your processor will not work.
 
 First method is constructor with config argument. Config is used to specifi path to plugin and resources directory.
 > public ProcessorAdapter(Config config);
@@ -68,47 +66,45 @@ Second method is load(). This method is used to load external resources, for exa
 > public void load();
 
 Third method is process(String data). This method is used for actual processing of data. 
-Method returns result of analysis, in case of sentiment analysis tool, this method return positive, neutral or negative.
+Method returns result of analysis, in case of sentiment analysis tool, this method returns positive, neutral or negative.
 > public String process(String data)
 
-## CITATIONS
+## CREDITS (citations if available)
 
-Lingpipe [site](http://alias-i.com/lingpipe/index.html):
+Lingpipe [site](http://alias-i.com/lingpipe/index.html)
 > Alias-i. 2008. LingPipe 4.1.0. http://alias-i.com/lingpipe (accessed October 1, 2008)
 
-StanfordCoreNLP [site](http://nlp.stanford.edu/):
+StanfordCoreNLP [site](http://nlp.stanford.edu/)
 > Manning, Christopher D., Mihai Surdeanu, John Bauer, Jenny Finkel, Steven J. Bethard, and David McClosky. 2014. The Stanford CoreNLP Natural Language Processing Toolkit In Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics: System Demonstrations, pp. 55-60.
 
-VADER: [site](https://github.com/cjhutto/vaderSentiment)
+VADER [site](https://github.com/cjhutto/vaderSentiment)
 > Hutto, C.J. & Gilbert, E.E. (2014). VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media Text. Eighth International Conference on Weblogs and Social Media (ICWSM-14). Ann Arbor, MI, June 2014.
 
-NLTK [site](http://www.nltk.org/):
-
-TODO
+NLTK [site](http://www.nltk.org/)
 
 Sentiment140 [site](http://help.sentiment140.com/)
 
-TODO
+Sanders [site](http://www.sananalytics.com/lab/twitter-sentiment/)
 
-Sanders [site](http://www.sananalytics.com/lab/twitter-sentiment/):
+Movie reviews [site](http://www.cs.cornell.edu/people/pabo/movie-review-data)
 
-Not found. 
-
-Movie reviews [site](http://www.cs.cornell.edu/people/pabo/movie-review-data):
-
-TODO
-
-rt_polarity data [site](http://www.nltk.org/):
+rt_polarity data [site](http://www.nltk.org/)
 > Seeing stars: Exploiting class relationships for sentiment categorization with respect to rating scales., Proceedings of the ACL, 2005.
 
-pros-cons [site](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#datasets):
+pros-cons [site](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#datasets)
 
-TODO
+sts_gold [site](http://www.tweenator.com/index.php?page_id=1)
 
-sts_gold [site](http://www.tweenator.com/index.php?page_id=1):
+Czech sentiment [site](https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-1507)
+> Fiala, Ondřej, 2015, Aspect-Term Annotated Customer Reviews in Czech, LINDAT/CLARIN digital library at Institute of Formal and Applied Linguistics, Charles University in Prague, http://hdl.handle.net/11234/1-1507.
 
-TODO
+## ACKNOWLEDGEMENT
 
-Czech sentiment [site](https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-1507):
-> Fiala, Ondřej, 2015, Aspect-Term Annotated Customer Reviews in Czech, LINDAT/CLARIN digital library at Institute of Formal and Applied Linguistics, Charles University in Prague, http://hdl.handle.net/11234/1-1507. 
+This development has been partially funded by the European Union through the MixedEmotions Project (project number H2020 655632), as part of the `RIA ICT 15 Big data and Open Data Innovation and take-up` programme.
+
+![MixedEmotions](https://raw.githubusercontent.com/MixedEmotions/MixedEmotions/master/img/me.png) 
+
+![EU](https://raw.githubusercontent.com/MixedEmotions/MixedEmotions/master/img/H2020-Web.png)
+
+http://ec.europa.eu/research/participants/portal/desktop/en/opportunities/index.html
 
