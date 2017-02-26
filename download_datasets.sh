@@ -4,6 +4,7 @@
 
 drop_dir="resources/me_sentiment/corpora/"
 
+mkdir -p $drop_dir"sentiment140"
 wget -t 2 "http://cs.stanford.edu/people/alecmgo/trainingandtestdata.zip"  --directory-prefix=$drop_dir"sentiment140" ;\
  unzip $drop_dir"sentiment140/*.zip" -d $drop_dir"sentiment140/" ;ls $drop_dir"sentiment140/"
 rm "resources/me_sentiment/corpora/sentiment140/trainingandtestdata.zip"   

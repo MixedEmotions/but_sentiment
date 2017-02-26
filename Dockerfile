@@ -3,33 +3,27 @@ MAINTAINER Adam Ormandy xorman00@stud.fit.vutbr.cz
 ENV LANG C.UTF-8
 
 RUN apt-get update
-#RUN apt-get upgrade
-RUN apt-get install -y maven
-RUN apt-get install -y openjdk-8-jdk maven
-RUN apt-get install -y python3
-RUN apt-get install -y wget
-RUN apt-get install -y unzip
-RUN apt-get clean
+RUN apt-get install -y default-jre python3
+RUN apt-get install -y wget unzip apt-utils
 
-RUN mkdir /usr/src/sentiment	
-RUN mkdir /usr/src/sentiment/libs
-RUN mkdir /usr/src/sentiment/resources
-RUN mkdir /usr/src/sentiment/src
+RUN mkdir /home/sentiment
+RUN mkdir /home/sentiment/resources
+RUN mkdir /home/sentiment/src
+RUN mkdir /home/sentiment/target
 
-ADD ./resources  /usr/src/sentiment/resources
-ADD ./config.ini  /usr/src/sentiment/config.ini
-ADD ./src  /usr/src/sentiment/src
-ADD ./pom.xml  /usr/src/sentiment/pom.xml
-ADD ./download_datasets.sh  /usr/src/sentiment/download_datasets.sh
+ADD ./  /home/sentiment/
+#ADD ./target/but_sentiment-jar-with-dependencies.jar  /home/sentiment/
+#ADD ./src  /home/sentiment/src
+#ADD ./resources  /home/sentiment/resources
+#ADD ./config.ini  /home/sentiment/config.ini
+#ADD ./download_datasets.sh  /home/sentiment/download_datasets.sh
 
-WORKDIR /usr/src/sentiment
+WORKDIR /home/sentiment
 
+RUN ls
+RUN ls resources
 RUN ./download_datasets.sh
-
-RUN mvn install
-
 RUN apt-get remove -y unzip
-RUN apt-get remove -y maven
-RUN apt-get remove -y wget
+RUN apt-get remove -y wget unzip
 
-ENTRYPOINT ["java","-jar","target/but_sentiment-jar-with-dependencies.jar"]
+ENTRYPOINT ["java","-jar","./target/but_sentiment-jar-with-dependencies.jar"]
