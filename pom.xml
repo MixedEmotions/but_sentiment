@@ -19,6 +19,7 @@
 	            <configuration>
 	                <source>1.8</source>
 	                <target>1.8</target>
+	                <encoding>UTF-8</encoding>
 	            </configuration>
 	        </plugin>
 
@@ -28,7 +29,6 @@
 			    <archive>
 			      <manifest>
 			        <mainClass>cz.vutbr.mefw.Mefw</mainClass>
-					  <!--<mainClass>cz.vutbr.mefw.plugins.SA_stanford</mainClass>-->
                    </manifest>
                  </archive>
                  <descriptorRefs>
